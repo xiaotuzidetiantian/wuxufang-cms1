@@ -1,4 +1,5 @@
 package com.wuxufang.cms.util;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,12 +26,14 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilde
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 
 import com.github.pagehelper.PageInfo;
+
 /**
  * Es工具类
  */
 public class EsUtil {
 	/**
 	 * 保存及更新方法
+	 * 
 	 * @param elasticsearchTemplate
 	 * @param id
 	 * @param object
@@ -44,6 +47,7 @@ public class EsUtil {
 
 	/**
 	 * 批量删除
+	 * 
 	 * @param elasticsearchTemplate
 	 * @param clazz
 	 * @param ids
@@ -59,8 +63,8 @@ public class EsUtil {
 	 * @Title: selectById
 	 * @Description: 根据id在es服务启中查询对象
 	 * @param elasticsearchTemplate
-	 * @param clazz 对象的Class
-	 * @param id 主键
+	 * @param clazz                 对象的Class
+	 * @param id                    主键
 	 * @return: Object
 	 */
 	public static Object selectById(ElasticsearchTemplate elasticsearchTemplate, Class<?> clazz, Integer id) {
@@ -71,9 +75,10 @@ public class EsUtil {
 
 	/**
 	 * 根据关键词查询文档，支持关键词高亮、可以指定排序字段
+	 * 
 	 * @param elasticsearchTemplate
-	 * @param keyword 搜索关键词
-	 * @param clazz 返回实体类class
+	 * @param keyword               搜索关键词
+	 * @param clazz                 返回实体类class
 	 * @param sortField
 	 * @param pageNum
 	 * @param pageSize
@@ -81,13 +86,13 @@ public class EsUtil {
 	 * @return
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static  PageInfo<?> findByKeyword(ElasticsearchTemplate elasticsearchTemplate, String keyword, 
-			Class<?> clazz, String sortField,Integer pageNum,Integer pageSize, String highLightfieldNames) {
+	public static PageInfo<?> findByKeyword(ElasticsearchTemplate elasticsearchTemplate, String keyword, Class<?> clazz,
+			String sortField, Integer pageNum, Integer pageSize, String highLightfieldNames) {
 		/** 定义要返回结果PageInfo **/
 		PageInfo<?> pageInfo = new PageInfo<>();
-		/** ES的查询结果  **/		
+		/** ES的查询结果 **/
 		AggregatedPage<?> page = null;
-		/** 创建Pageable对象,主键的实体类属性名 **/	
+		/** 创建Pageable对象,主键的实体类属性名 **/
 		final Pageable pageable = PageRequest.of(pageNum - 1, pageSize, Sort.by(Sort.Direction.ASC, sortField));
 		/** 定义查询对象 **/
 		SearchQuery searchQuery = null;
@@ -107,9 +112,7 @@ public class EsUtil {
 		if (keyword != null && !"".equals(keyword)) {
 			/** 创建queryBuilder对象 **/
 			queryBuilder = QueryBuilders.multiMatchQuery(keyword, fieldNames);
-			searchQuery = new NativeSearchQueryBuilder()
-					.withQuery(queryBuilder)
-					.withHighlightFields(highlightFields)
+			searchQuery = new NativeSearchQueryBuilder().withQuery(queryBuilder).withHighlightFields(highlightFields)
 					.withPageable(pageable).build();
 			/** 查询数据 **/
 			page = elasticsearchTemplate.queryForPage(searchQuery, clazz, new SearchResultMapper() {
@@ -120,7 +123,7 @@ public class EsUtil {
 						/** 查询结果 **/
 						SearchHits hits = response.getHits();
 						/** 查询结果为空 **/
-						if(hits==null) {
+						if (hits == null) {
 							return new AggregatedPageImpl<T>(contentList, pageable, total);
 						}
 						/** 获取总记录数 **/
@@ -128,18 +131,22 @@ public class EsUtil {
 						/** 获取结果数组 **/
 						SearchHit[] searchHits = hits.getHits();
 						/** 遍历封装查询的对象 **/
-						for (SearchHit searchHit:searchHits) {
-							/** 对象值  **/
+						for (SearchHit searchHit : searchHits) {
+							/** 对象值 **/
 							T entity = clazz.newInstance();
 							/** 获取对象的所有的字段 **/
 							Field[] fields = clazz.getDeclaredFields();
 							/** 遍历字段对象 **/
-							for (Field field:fields) {
+							for (Field field : fields) {
 								/** 暴力反射 **/
 								field.setAccessible(true);
 								/** 字段名称 **/
 								String fieldName = field.getName();
-								if("serialVersionUID".equals(fieldName)) {
+//								if("serialVersionUID".equals(fieldName)) {
+//									continue;
+//								}
+								if ("serialVersionUID".equals(fieldName) || "user".equals(fieldName)
+										|| "channel".equals(fieldName) || "category".equals(fieldName)) {
 									continue;
 								}
 								/** 字段值 **/
@@ -151,7 +158,7 @@ public class EsUtil {
 								}
 								/** 是否高亮字段 **/
 								HighlightField highlightField = searchHit.getHighlightFields().get(fieldName);
-								if(highlightField!=null) {
+								if (highlightField != null) {
 									/** 高亮 处理 拿到 被<font color='red'> </font>结束所包围的内容部分 **/
 									fieldValue = highlightField.getFragments()[0].toString();
 								}
@@ -168,19 +175,27 @@ public class EsUtil {
 			});
 
 		} else {
-			/** 没有查询条件，分页获取ES中的全部数据  **/
+			/** 没有查询条件，分页获取ES中的全部数据 **/
 			searchQuery = new NativeSearchQueryBuilder().withPageable(pageable).build();
 			page = elasticsearchTemplate.queryForPage(searchQuery, clazz);
 		}
 		/** 封装PageInfo对象 **/
 		int totalCount = (int) page.getTotalElements();
-		int pages = totalCount%pageSize==0?totalCount/pageSize:totalCount/pageNum+1;
+		int pages = totalCount % pageSize == 0 ? totalCount / pageSize : totalCount / pageNum + 1;
+		// totalCount%pageSize==0?totalCount/pageSize:totalCount/pageNum+1;
 		pageInfo.setTotal(page.getTotalElements());
 		pageInfo.setPageNum(pageNum);
 		pageInfo.setPageSize(pageSize);
-		pageInfo.setPrePage(pageNum-1);
-		pageInfo.setNextPage(pageNum+1);
+		pageInfo.setPrePage(pageNum - 1);
+		pageInfo.setNextPage(pageNum + 1);
 		pageInfo.setPages(pages);
+		pageInfo.setHasNextPage(pageNum != pages);
+		pageInfo.setHasPreviousPage(pageNum > 1);
+		int[] navigatepageNums = new int[pages];
+		for (int i = 0; i < pages; i++) {
+			navigatepageNums[i] = i + 1;
+		}
+		pageInfo.setNavigatepageNums(navigatepageNums);
 		List content = page.getContent();
 		pageInfo.setList(content);
 		return pageInfo;

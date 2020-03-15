@@ -14,6 +14,7 @@ import com.wuxufang.cms.util.CMSException;
 import com.wuxufang.cms.util.Md5Util;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.wuxufang.util.RandomUtil;
 import com.wuxufang.util.StringUtil;
 
 @Service
@@ -93,6 +94,13 @@ public class UserServiceImpl implements UserService {
 			  throw new CMSException("账户被停用");
 		
 		return u;
+	}
+
+	@Override
+	public Integer getRandomUserId() {
+		List<Integer> userIdList = userMapper.selectIdList();
+		int random = RandomUtil.random(0, userIdList.size()-1);
+		return userIdList.get(random);
 	}
 
 }

@@ -15,12 +15,17 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+/**
+ * 抓取163网站文章
+ * @author 煜
+ *
+ */
 public class JsoupTest {
 
 	/** 保存已抓取的html链接，避免重复抓取 **/
 	private static Set<String> linkSet = new HashSet<>();
 	/** txt文件保存位置 **/
-	private static String filePath = "F:\\html\\";
+	private static String filePath = "C:\\html\\";
 
 	/**
 	 * 主函数，抓取163.com的文章

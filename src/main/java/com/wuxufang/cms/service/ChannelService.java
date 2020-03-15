@@ -24,4 +24,10 @@ public interface ChannelService {
 	 * @return: List<Category>
 	 */
 	List<Category> selectsByCid(Integer channelId);
+	
+	//获取随即频道id
+	Integer getRandomChannelId();
+	
+	//随机指定频道下的分类id
+	Integer getRandomCateId(Integer channelId);
 }

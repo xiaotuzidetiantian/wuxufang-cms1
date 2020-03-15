@@ -10,6 +10,7 @@ import com.wuxufang.cms.dao.ChannelMapper;
 import com.wuxufang.cms.domain.Category;
 import com.wuxufang.cms.domain.Channel;
 import com.wuxufang.cms.service.ChannelService;
+import com.wuxufang.util.RandomUtil;
 
 @Service
 public class ChannelServiceImpl implements ChannelService {
@@ -24,6 +25,20 @@ private ChannelMapper channelMapper;
 	@Override
 	public List<Category> selectsByCid(Integer channelId) {
 		return channelMapper.selectsByCid(channelId);
+	}
+
+	@Override
+	public Integer getRandomChannelId() {
+		List<Integer> channelIdList = channelMapper.selectChannelIdList();
+		int random = RandomUtil.random(0, channelIdList.size()-1);
+		return channelIdList.get(random);
+	}
+
+	@Override
+	public Integer getRandomCateId(Integer channelId) {
+		List<Integer> cateIdList = channelMapper.selectCateIdList(channelId);
+		int random = RandomUtil.random(0, cateIdList.size()-1);
+		return cateIdList.get(random);
 	}
 
 }

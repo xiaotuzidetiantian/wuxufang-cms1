@@ -224,4 +224,14 @@ public class Article implements Serializable {
 		this.original = original;
 	}
 
+	@Override
+	public String toString() {
+		return "Article [id=" + id + ", title=" + title + ", picture=" + picture + ", channelId=" + channelId
+				+ ", categoryId=" + categoryId + ", userId=" + userId + ", content=" + content + ", summary=" + summary
+				+ ", hits=" + hits + ", hot=" + hot + ", status=" + status + ", deleted=" + deleted + ", created="
+				+ created + ", updated=" + updated + ", contentType=" + contentType + ", keywords=" + keywords
+				+ ", original=" + original + ", user=" + user + ", channel=" + channel + ", category=" + category + "]";
+	}
+	
+
 }

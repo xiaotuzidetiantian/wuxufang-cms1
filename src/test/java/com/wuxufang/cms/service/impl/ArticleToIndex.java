@@ -22,7 +22,7 @@ import com.wuxufang.cms.service.ArticleService;
 public class ArticleToIndex {
 
 	@Autowired
-	private ArticleService articleService;b
+	private ArticleService articleService;
 	@Autowired
 	private ArticleRepositroy articleRepositroy;
 	@SuppressWarnings("null")

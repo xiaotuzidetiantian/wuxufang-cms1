@@ -30,15 +30,16 @@
 		<aspectj-version>1.8.0</aspectj-version>
 		<!-- 分页助手 -->
 		<pagehelper-version>5.1.2</pagehelper-version>
-
+		
 		<!-- 文件拷贝时的编码 -->
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<!-- 编译时的编码 -->
-		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>  
+        <!-- 编译时的编码 -->  
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
 	</properties>
 	<!-- jar依赖 -->
 	<dependencies>
+		<!-- 依赖工具工程 -->
 		<dependency>
 			<groupId>com.wuxufang</groupId>
 			<artifactId>wuxufang-utils</artifactId>
@@ -235,33 +236,22 @@
 			<artifactId>gson</artifactId>
 			<version>2.8.5</version>
 		</dependency>
-		<!-- redis -->
-		<dependency>
-			<groupId>redis.clients</groupId>
-			<artifactId>jedis</artifactId>
-			<version>2.6.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-redis</artifactId>
-			<version>1.4.1.RELEASE</version>
-		</dependency>
-		<!-- fastjson -->
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>1.2.4</version>
-		</dependency>
-		<!-- kafka -->
-		<dependency>
-			<groupId>org.springframework.kafka</groupId>
-			<artifactId>spring-kafka</artifactId>
-			<version>2.2.0.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.kafka</groupId>
-			<artifactId>kafka_2.10</artifactId>
-			<version>0.8.2.1</version>
+        <!-- redis -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.6.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
+            <version>1.4.1.RELEASE</version>
+        </dependency>
+        <!-- fastjson -->
+        <dependency>
+		    <groupId>com.alibaba</groupId>
+		    <artifactId>fastjson</artifactId>
+		    <version>1.2.4</version>
 		</dependency>
 		<!-- elaticSearch -->
 		<dependency>
@@ -290,10 +280,27 @@
 			<artifactId>jsoup</artifactId>
 			<version>1.12.1</version>
 		</dependency>
-
+        <!-- kafka -->
+		<dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+            <version>2.2.0.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka_2.10</artifactId>
+            <version>0.8.2.1</version>
+		</dependency>
+        <!-- fastjson -->
+        <dependency>
+		    <groupId>com.alibaba</groupId>
+		    <artifactId>fastjson</artifactId>
+		    <version>1.2.4</version>
+		</dependency>
 	</dependencies>
 	<!-- 构建项目 -->
 	<build>
+		<finalName>ROOT</finalName>
 		<plugins>
 			<plugin>
 				<!-- mavend 编译插件 -->
@@ -308,18 +315,18 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
 				<version>3.2.1</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 			<!-- jetty配置 -->
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
@@ -338,7 +345,7 @@
 							<!-- 虚拟路径 -->
 							<contextPath>/pic/</contextPath>
 							<!-- 物理路径 -->
-							<resourceBase>D:/pic/</resourceBase>
+							<resourceBase>d:/pic/</resourceBase>
 						</jettyWebAppContext>
 					</contextHandlers>
 					<scanIntervalSeconds>1</scanIntervalSeconds>
@@ -361,7 +368,8 @@
 					<useTestClasspath>true</useTestClasspath>
 					<staticContextPath>/pic/</staticContextPath>
 					<staticContextDocbase>D:/pic/</staticContextDocbase>
-					<!-- <staticContextPath>/img/</staticContextPath> <staticContextDocbase>D:/pic/</staticContextDocbase> -->
+					<!-- <staticContextPath>/img/</staticContextPath>
+					<staticContextDocbase>D:/pic/</staticContextDocbase> -->
 				</configuration>
 			</plugin>
 		</plugins>

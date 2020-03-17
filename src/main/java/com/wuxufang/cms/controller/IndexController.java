@@ -3,6 +3,8 @@ package com.wuxufang.cms.controller;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -52,6 +54,9 @@ public class IndexController {
 	private IllService illService;
 	@Resource
 	private LinksService linksService;
+	
+	//定义线程池
+	private ExecutorService executorService = Executors.newFixedThreadPool(10);
 	
 	@RequestMapping(value = {"","/","index"})
 	public String index(Model model,Article article,@RequestParam(defaultValue = "1")Integer page,
@@ -160,6 +165,27 @@ public class IndexController {
 			Collect collect = collectService.selectByTitleAndUserId(article.getTitle(), user.getId());
 			model.addAttribute("collect", collect);
 		 }
+		 
+//		 CountDownLatch countDownLatch = new CountDownLatch(3);
+//			/** 频道 **/
+//			executorService.execute(()->{
+//				model.addAttribute("channelList", articleService.getChannelAll());
+//				countDownLatch.countDown();
+//			});
+//			
+//			/** 焦点图 **/
+//			executorService.execute(()->{
+//				model.addAttribute("slideList", slideService.getAll());
+//				countDownLatch.countDown();
+//			});
+//			
+//			/** 热点文章 **/
+//			//PageInfo<Article> pageInfo = articleService.getHotListByCache(pageNum,4);
+//			executorService.execute(()->{
+//				PageInfo<Article> pageInfo = articleService.getHotListByCache(pageNum,4);
+//				model.addAttribute("pageInfo", pageInfo);
+//				countDownLatch.countDown();
+//			});
 		
 		return "index/article";
 	}
